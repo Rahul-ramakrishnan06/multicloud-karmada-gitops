@@ -1,0 +1,19 @@
+# APPLICATION CONFIG — external-secrets
+# Alias-only cluster references (resolved from karmada-gitops/values.yml).
+
+appName: external-secrets
+namespace: external-secrets
+
+clusterAliases:
+  - prod-aws
+  - dr-aws
+  - dev-gcp
+
+# Upstream Helm chart.
+# https://artifacthub.io/packages/helm/external-secrets-operator/external-secrets
+chart:
+  repoURL: https://charts.external-secrets.io
+  name: external-secrets
+  version: 0.9.20
+
+valuesFile: values/node.yml

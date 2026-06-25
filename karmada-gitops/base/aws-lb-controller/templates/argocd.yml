@@ -1,25 +1,69 @@
+# Per-app ApplicationSet — aws-lb-controller.
+# Static manifest, applied by the routing Application (argocd/argocd.yml).
+# Fans out one Application per target cluster, resolved by alias.
 apiVersion: argoproj.io/v1alpha1
-kind: Application
+kind: ApplicationSet
 metadata:
-  name: {{ .Values.appName | default "aws-load-balancer-controller" }}
-  namespace: {{ .Values.argoNamespace | default "argocd" }}
-  annotations:
-    argocd.argoproj.io/sync-wave: "5"
+  name: aws-lb-controller
+  namespace: argocd
 spec:
-  project: {{ .Values.project | default "default" }}
-  source:
-    repoURL: {{ .Values.repoURL | default "https://github.com/Rahul-ramakrishnan06/multicloud-karmada-gitops.git" }}
-    targetRevision: {{ .Values.targetRevision | default "HEAD" }}
-    path: karmada-gitops/base/aws-lb-controller
-    helm:
-      valueFiles:
-        - values/node.yml
-  destination:
-    server: {{ .Values.destinationServer | default "https://kubernetes.default.svc" }}
-    namespace: {{ .Values.namespace | default "kube-system" }}
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
+  goTemplate: true
+  goTemplateOptions:
+    - missingkey=error
+  generators:
+    # Target clusters by alias (mirrors clusterAliases in value.yml).
+    # Registry data rides on the cluster Secret labels/annotations projected
+    # by the cluster-registry chart (argocd/cluster-registry).
+    - clusters:
+        selector:
+          matchExpressions:
+            - key: cluster-alias
+              operator: In
+              values:
+                - prod-aws
+                - dr-aws
+  template:
+    metadata:
+      name: 'aws-lb-controller-{{ .metadata.labels.cluster-alias }}'
+      finalizers:
+        - resources-finalizer.argocd.argoproj.io
+    spec:
+      project: default
+      sources:
+        # Git source — exposes the app's value files via $values.
+        - repoURL: https://github.com/Rahul-ramakrishnan06/multicloud-karmada-gitops.git
+          targetRevision: HEAD
+          ref: values
+        # Upstream Helm chart (artifacthub: aws-load-balancer-controller).
+        - repoURL: https://aws.github.io/eks-charts
+          chart: aws-load-balancer-controller
+          targetRevision: 1.7.2
+          helm:
+            valueFiles:
+              - $values/karmada-gitops/base/aws-lb-controller/values/node.yml
+            # Per-cluster values resolved by alias from the registry
+            # (cluster Secret annotations). valuesObject avoids key escaping.
+            valuesObject:
+              clusterName: '{{ .metadata.annotations.cluster-name }}'
+              region: '{{ .metadata.annotations.cluster-region }}'
+              vpcId: '{{ .metadata.annotations.cluster-vpc-id }}'
+              serviceAccount:
+                annotations:
+                  eks.amazonaws.com/role-arn: '{{ .metadata.annotations.cluster-role-arn }}'
+      destination:
+        server: '{{ .server }}'
+        namespace: kube-system
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+          allowEmpty: false
+        syncOptions:
+          - CreateNamespace=true
+          - ServerSideApply=true
+        retry:
+          limit: 5
+          backoff:
+            duration: 5s
+            factor: 2
+            maxDuration: 3m

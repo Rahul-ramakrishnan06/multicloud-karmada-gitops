@@ -1,0 +1,18 @@
+# APPLICATION CONFIG — karpenter
+# Alias-only cluster references (resolved from karmada-gitops/values.yml).
+
+appName: karpenter
+namespace: kube-system
+
+clusterAliases:
+  - prod-aws
+  - dr-aws
+
+# Upstream Helm chart (OCI registry).
+# https://gallery.ecr.aws/karpenter/karpenter
+chart:
+  repoURL: public.ecr.aws/karpenter
+  name: karpenter
+  version: 0.37.0
+
+valuesFile: values/node.yml

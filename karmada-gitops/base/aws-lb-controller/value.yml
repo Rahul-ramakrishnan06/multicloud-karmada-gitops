@@ -1,17 +1,23 @@
-# Default values for aws-lb-controller wrapper chart
+# APPLICATION CONFIG — aws-lb-controller
+# References clusters ONLY by alias (resolved from global values.yml).
+# No raw cluster details here (no VPC, no region).
+# Consumed by the central ApplicationSet (karmada-gitops/argocd/argocd.yml).
 
-# Application configuration options
-appName: aws-load-balancer-controller
-argoNamespace: argocd
-project: default
-repoURL: https://github.com/Rahul-ramakrishnan06/multicloud-karmada-gitops.git
-targetRevision: HEAD
-destinationServer: https://kubernetes.default.svc
+# App identity + target namespace.
+appName: aws-lb-controller
 namespace: kube-system
 
-# Dependencies toggles
-karpenter:
-  enabled: false
+# Clusters this app deploys to — alias only.
+clusterAliases:
+  - prod-aws
+  - dr-aws
 
-universal:
-  enabled: false
+# Upstream Helm chart reference.
+# https://artifacthub.io/packages/helm/aws/aws-load-balancer-controller
+chart:
+  repoURL: https://aws.github.io/eks-charts
+  name: aws-load-balancer-controller
+  version: 1.7.2
+
+# App-generic Helm value overrides + resources live in values/node.yml.
+valuesFile: values/node.yml

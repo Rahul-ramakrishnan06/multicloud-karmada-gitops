@@ -1,0 +1,16 @@
+# App-generic Helm value overrides for Karpenter.
+# https://gallery.ecr.aws/karpenter/karpenter
+# No per-cluster values here. settings.clusterName + SA role-arn injected per-target.
+
+replicas: 2
+serviceAccount:
+  create: true
+  name: karpenter
+controller:
+  resources:
+    requests:
+      cpu: 200m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi

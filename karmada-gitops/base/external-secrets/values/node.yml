@@ -1,0 +1,16 @@
+# App-generic Helm value overrides for External Secrets Operator.
+# https://artifacthub.io/packages/helm/external-secrets-operator/external-secrets
+# No per-cluster values here. SA identity (role-arn / gsa) is injected per-target.
+
+installCRDs: true
+replicaCount: 1
+serviceAccount:
+  create: true
+  name: external-secrets
+resources:
+  requests:
+    cpu: 50m
+    memory: 96Mi
+  limits:
+    cpu: 150m
+    memory: 192Mi

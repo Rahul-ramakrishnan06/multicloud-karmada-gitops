@@ -1,0 +1,6 @@
+apiVersion: v2
+name: cluster-registry
+description: Renders ArgoCD cluster Secrets from the global registry (values.yml). Registers clusters and projects alias/region/vpc/identity onto each Secret.
+type: application
+version: 1.0.0
+appVersion: "1.0.0"

@@ -1,0 +1,18 @@
+# APPLICATION CONFIG — redis
+# Alias-only cluster references (resolved from karmada-gitops/values.yml).
+
+appName: redis
+namespace: redis
+
+clusterAliases:
+  - prod-aws
+  - dr-aws
+
+# Upstream Helm chart.
+# https://artifacthub.io/packages/helm/bitnami/redis
+chart:
+  repoURL: https://charts.bitnami.com/bitnami
+  name: redis
+  version: 19.6.4
+
+valuesFile: values/node.yml

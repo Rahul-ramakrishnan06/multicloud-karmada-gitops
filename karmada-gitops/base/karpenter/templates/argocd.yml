@@ -1,0 +1,62 @@
+# Per-app ApplicationSet — karpenter.
+# Static manifest, applied by the routing Application (argocd/argocd.yml).
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: karpenter
+  namespace: argocd
+spec:
+  goTemplate: true
+  goTemplateOptions:
+    - missingkey=error
+  generators:
+    - clusters:
+        selector:
+          matchExpressions:
+            - key: cluster-alias
+              operator: In
+              values:
+                - prod-aws
+                - dr-aws
+  template:
+    metadata:
+      name: 'karpenter-{{ .metadata.labels.cluster-alias }}'
+      finalizers:
+        - resources-finalizer.argocd.argoproj.io
+    spec:
+      project: default
+      sources:
+        - repoURL: https://github.com/Rahul-ramakrishnan06/multicloud-karmada-gitops.git
+          targetRevision: HEAD
+          ref: values
+        # OCI Helm chart — registry must be registered in ArgoCD with enableOCI=true.
+        - repoURL: public.ecr.aws/karpenter
+          chart: karpenter
+          targetRevision: 0.37.0
+          helm:
+            valueFiles:
+              - $values/karmada-gitops/base/karpenter/values/node.yml
+            # Per-cluster values resolved by alias from the registry.
+            valuesObject:
+              settings:
+                clusterName: '{{ .metadata.annotations.cluster-name }}'
+              serviceAccount:
+                annotations:
+                  eks.amazonaws.com/role-arn: '{{ .metadata.annotations.cluster-role-arn }}'
+      destination:
+        server: '{{ .server }}'
+        namespace: kube-system
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+          allowEmpty: false
+        syncOptions:
+          - CreateNamespace=true
+          - ServerSideApply=true
+        retry:
+          limit: 5
+          backoff:
+            duration: 5s
+            factor: 2
+            maxDuration: 3m

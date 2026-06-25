@@ -1,0 +1,47 @@
+# GLOBAL CLUSTER REGISTRY
+# Single source of truth for ALL cluster + VPC + identity data.
+# Everything else references clusters ONLY by alias.
+# Per-cluster runtime values (clusterName/region/vpcId/identity) live HERE,
+# never inline in any app value/node file.
+
+clusters:
+  - alias: prod-aws
+    cloud: aws
+    environment: prod
+    clusterName: prod-aws-eks
+    region: us-east-1
+    vpc:
+      id: vpc-0aprod1111111111
+      cidr: 10.0.0.0/16
+    server: https://prod-aws.eks.us-east-1.amazonaws.com
+    # AWS IRSA — role assumed by service accounts on this cluster.
+    identity:
+      type: irsa
+      roleArn: arn:aws:iam::111111111111:role/aws-load-balancer-controller
+
+  - alias: dr-aws
+    cloud: aws
+    environment: dr
+    clusterName: dr-aws-eks
+    region: us-west-2
+    vpc:
+      id: vpc-0adr2222222222222
+      cidr: 10.1.0.0/16
+    server: https://dr-aws.eks.us-west-2.amazonaws.com
+    identity:
+      type: irsa
+      roleArn: arn:aws:iam::222222222222:role/aws-load-balancer-controller
+
+  - alias: dev-gcp
+    cloud: gcp
+    environment: dev
+    clusterName: dev-gcp-gke
+    region: us-central1
+    vpc:
+      id: gcp-dev-vpc-network
+      cidr: 10.2.0.0/16
+    server: https://dev-gcp.gke.us-central1.googleapis.com
+    # GCP Workload Identity — not IRSA.
+    identity:
+      type: workload-identity
+      gsa: aws-load-balancer-controller@dev-gcp.iam.gserviceaccount.com

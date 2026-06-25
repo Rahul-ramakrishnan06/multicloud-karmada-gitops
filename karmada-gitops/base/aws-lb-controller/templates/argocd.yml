@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: {{ .Values.appName | default "aws-load-balancer-controller" }}
+  namespace: {{ .Values.argoNamespace | default "argocd" }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+spec:
+  project: {{ .Values.project | default "default" }}
+  source:
+    repoURL: {{ .Values.repoURL | default "https://github.com/Rahul-ramakrishnan06/multicloud-karmada-gitops.git" }}
+    targetRevision: {{ .Values.targetRevision | default "HEAD" }}
+    path: karmada-gitops/base/aws-lb-controller
+    helm:
+      valueFiles:
+        - values/node.yml
+  destination:
+    server: {{ .Values.destinationServer | default "https://kubernetes.default.svc" }}
+    namespace: {{ .Values.namespace | default "kube-system" }}
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

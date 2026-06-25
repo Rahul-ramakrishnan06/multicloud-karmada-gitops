@@ -1,0 +1,24 @@
+apiVersion: v2
+name: aws-lb-controller
+description: Local wrapper Helm chart referencing AWS Load Balancer Controller, Karpenter, and a placeholder for our universal-helm-chart.
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
+
+dependencies:
+  # Official AWS Load Balancer Controller Helm chart
+  - name: aws-load-balancer-controller
+    version: 1.7.2
+    repository: https://aws.github.io/eks-charts
+
+  # Official Karpenter Helm chart
+  - name: karpenter
+    version: 0.37.0
+    repository: oci://public.ecr.aws/karpenter/karpenter
+    condition: karpenter.enabled
+
+  # Placeholder for the custom universal-helm-chart to be created later
+  - name: universal-helm-chart
+    version: 0.1.0
+    repository: file://../universal-helm-chart
+    condition: universal.enabled

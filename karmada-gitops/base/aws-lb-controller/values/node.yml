@@ -1,0 +1,19 @@
+# Values specifically for the AWS Load Balancer Controller deployment on cluster nodes
+aws-load-balancer-controller:
+  clusterName: my-eks-cluster
+  region: us-east-1
+  vpcId: vpc-0123456789abcdef0
+  serviceAccount:
+    create: true
+    name: aws-load-balancer-controller
+    annotations:
+      eks.amazonaws.com/role-arn: arn:aws:iam::123456789012:role/aws-load-balancer-controller-role
+  # Additional custom parameters
+  replicaCount: 2
+  resources:
+    limits:
+      cpu: 200m
+      memory: 256Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi

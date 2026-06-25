@@ -1,0 +1,17 @@
+# Default values for aws-lb-controller wrapper chart
+
+# Application configuration options
+appName: aws-load-balancer-controller
+argoNamespace: argocd
+project: default
+repoURL: https://github.com/Rahul-ramakrishnan06/multicloud-karmada-gitops.git
+targetRevision: HEAD
+destinationServer: https://kubernetes.default.svc
+namespace: kube-system
+
+# Dependencies toggles
+karpenter:
+  enabled: false
+
+universal:
+  enabled: false

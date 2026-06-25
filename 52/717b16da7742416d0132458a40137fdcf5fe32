@@ -1,0 +1,62 @@
+karmada-gitops/base/karpenter/chart.yml
+  s_e4a4adce3f663d::t_cd563305f77681 1-4
+karmada-gitops/base/aws-lb-controller/chart.yml
+  s_e4a4adce3f663d::t_02680cbd50c75f 1-2
+karmada-gitops/base/aws-lb-controller/values/node.yml
+  s_e4a4adce3f663d::t_2aadf9ad370de5 8-23
+  s_e4a4adce3f663d::t_ff8d534dc02fdb 2-3
+  s_e4a4adce3f663d::t_c07641a6679cc2 1,4-7
+karmada-gitops/argocd/argocd.yml
+  s_e4a4adce3f663d::t_fd672e9d3c9699 1-8,19-21,40-62,64-84,89
+  s_e4a4adce3f663d::t_676f2715fd83ed 63
+  s_e4a4adce3f663d::t_686a1653c084c7 85-88,93,107,113-115,118
+karmada-gitops/base/external-secrets/chart.yml
+  s_e4a4adce3f663d::t_5c950a6819deae 1-4
+README.md
+  s_e4a4adce3f663d::t_703e8938086060 1-127
+karmada-gitops/base/aws-lb-controller/value.yml
+  s_e4a4adce3f663d::t_35433510df99bd 4,6-7,10,22-23
+  s_e4a4adce3f663d::t_702dfe2f773999 1-3,11-13
+  s_e4a4adce3f663d::t_56444c683fa134 15-21
+karmada-gitops/base/karpenter/values/node.yml
+  s_e4a4adce3f663d::t_88371b29da50b6 1-16
+karmada-gitops/aws-clusters/redis/chart.yml
+  s_e4a4adce3f663d::t_e2ff2a70ceb4e5 1-4
+karmada-gitops/base/external-secrets/value.yml
+  s_e4a4adce3f663d::t_5604efb2e8b76b 1-19
+karmada-gitops/base/external-secrets/templates/argocd.yml
+  s_e4a4adce3f663d::t_c64cc93f5a6290 1-61
+karmada-gitops/aws-clusters/redis/templates/argocd.yml
+  s_e4a4adce3f663d::t_7cb0d94ebd3059 1-54
+karmada-gitops/base/karpenter/value.yml
+  s_e4a4adce3f663d::t_bd45c835c7c76e 1-18
+karmada-gitops/base/karpenter/templates/argocd.yml
+  s_e4a4adce3f663d::t_56108c644e83e0 1-62
+karmada-gitops/base/external-secrets/values/node.yml
+  s_e4a4adce3f663d::t_be0fc30effcff0 1-16
+karmada-gitops/aws-clusters/redis/value.yml
+  s_e4a4adce3f663d::t_613588ddf8d38c 1-18
+karmada-gitops/values.yml
+  s_e4a4adce3f663d::t_b13015fe3cccc4 1,3,6-10,12-16,21-24,26-30,34-37,39-43
+  s_e4a4adce3f663d::t_339c7e4db74749 2,4-5,11,17-20,25,31-33,38,44-47
+karmada-gitops/aws-clusters/redis/values/node.yml
+  s_e4a4adce3f663d::t_8cb00269ad73b1 1-17
+karmada-gitops/base/aws-lb-controller/templates/argocd.yml
+  s_e4a4adce3f663d::t_9b784a3be16476 1-3,5,7-8,10-69
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.1",
+  "base_commit_sha": "52717b16da7742416d0132458a40137fdcf5fe32",
+  "prompts": {},
+  "sessions": {
+    "s_e4a4adce3f663d": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "e1700499-6893-4148-baee-318528c399f7",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Rahul-ramakrishnan06 <rahulkarthi06@gmail.com>"
+    }
+  }
+}
